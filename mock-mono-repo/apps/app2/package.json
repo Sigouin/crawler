@@ -1,0 +1,16 @@
+{
+    "exports": "APP2-Package.json",
+    "type": "module",
+    "scripts": {
+      "do:the:thing": "npx do --the --thing"
+    },
+    "dependencies": {
+      "dependencyG": "^0.5.0",
+      "dependencyH": "^2.4.4",
+      "dependencyI": "8.14.0",
+      "dependencyJ": "12.1.4",
+      "dependencyK": "^9.4.12",
+      "dependencyL": "^3.0.0",
+      "dependencyZ": "1.1.1"
+    }
+  }

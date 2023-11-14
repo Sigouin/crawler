@@ -1,0 +1,11 @@
+{
+    "exports": "IAMTHEROOT",
+    "type": "module",
+    "scripts": {
+        "do:the:thing": "npx do --the --thing"
+    },
+    "dependencies": {
+        "dependencyA": "^1.5.0",
+        "dependencyB": "^1.0.6"
+    }
+}

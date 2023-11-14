@@ -1,0 +1,14 @@
+{
+    "exports": "APP3-Package.json",
+    "type": "module",
+    "scripts": {
+      "do:the:thing": "npx do --the --thing"
+    },
+    "dependencies": {
+      "dependencyC": "~12.21.4",
+      "dependencyD": "11.0.0",
+      "dependencyE": "8.0.0",
+      "dependencyI": "~3.12.0",
+      "dependencyZ": "1.1.1"
+    }
+  }
