@@ -16,10 +16,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "ts:watch": "npx tsc --watch",
+    "start:dev": "npx nodemon",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watchAll"
   },
   "eslintConfig": {
     "extends": [
@@ -40,8 +40,8 @@
     ]
   },
   "devDependencies": {
-    "@types/jest": "^29.5.8",
     "jest": "^27.5.1",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1"
   }
 }
