@@ -2,9 +2,12 @@ import { readdirSync, readFileSync, lstatSync, writeFileSync, rmSync, mkdirSync,
 import path from 'path'
 
 const UPDATED_FOLDER = 'UPDATED';
-const IGNORED_DIRECTORIES = ['node_modules', UPDATED_FOLDER];
+const IGNORED_DIRECTORIES = [
+    'node_modules', 
+    UPDATED_FOLDER
+];
 const START_FOLDER = './mock-mono-repo';
-const TARGET_FILE = '.package.json';
+const TARGET_FILE = 'package.json';
 const rootPath = `${START_FOLDER}/${TARGET_FILE}`;
 const UPDATED_ROOT = './UPDATED';
 
@@ -31,7 +34,7 @@ export function readDirectoryFiles(currentFolder, targetFile) {
 
     function crawlDirectories(folder) {
         const matches: Array<string> = [];
-        const results = readdirSync(folder, "utf8");
+        const results = readdirSync(folder, 'utf8');
 
         results.forEach(result => {
             const resultData = lstatSync(path.resolve(folder, result));
