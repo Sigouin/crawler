@@ -19,7 +19,8 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "rootDir": "./"
+    "rootDir": "./",
+    "noImplicitAny": false
   },
   "ts-node": {
     "esm": true,

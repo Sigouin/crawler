@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, lstatSync, writeFileSync, rmSync, mkdirSync, existsSync, readFile } from "fs";
+import { readdirSync, readFileSync, lstatSync, writeFileSync, rmSync, mkdirSync, existsSync } from "fs";
 import path from 'path'
 
 const UPDATED_FOLDER = 'UPDATED';
@@ -9,17 +9,21 @@ const rootPath = `${START_FOLDER}/${TARGET_FILE}`;
 const UPDATED_ROOT = './UPDATED';
 
 export interface SharedDeps {
-    [key: string]: {[key:string]: string[]};
+    ['key=string']?: {
+        ['key=string']: string[]
+    };
 }
 
 export interface SortInstructions {
-    toAddToRoot: any;
-    toRemoveFromApp: any;
+    toAddToRoot: any,
+    toRemoveFromApp: any
 }
 
 interface AppFile {
-    file: string;
-    dependencies: {[key:string]:string};
+    file: string,
+    dependencies: {
+        ['key=string']:string
+    };
 }
 
 export function readDirectoryFiles(currentFolder, targetFile) {
@@ -65,16 +69,105 @@ export function parseAppDependencies(filesToParse: string[]): SharedDeps {
     while( thereAreStillMorePackagesFam ){
         let areThereMoreDeps = false;
 
-        appFiles.forEach(({file, dependencies}) => {
+        appFiles.forEach(({ file, dependencies }) => {
             const thisDep = Object.keys(dependencies)[i];
 
-            
+            if(!!thisDep) {
+                areThereMoreDeps = true
+                
+                shared[thisDep] = {
+                    ...shared[thisDep],
+                    [file]: dependencies[thisDep]
+                }
+            }   
         })
+
+        if(!areThereMoreDeps) {
+            thereAreStillMorePackagesFam = false
+        } else {
+            i++
+        }
     }
+    return shared
 }
 
-export function sortDependencies()
+export function sortDependencies(sharedDeps: SharedDeps){
+    const sortInstructions: SortInstructions = {
+        toAddToRoot: {},
+        toRemoveFromApp: {},
+    }
 
-export function generateNewPackageFiles()
+    Object.keys(sharedDeps).forEach(dep => {
+        const thisDep = sharedDeps[dep];
+        const versions = Object.values(thisDep);
+        const uniqueVersions = new Set(versions).size;
 
-export function createNewPackageFiles()
+        if( uniqueVersions === 1){
+            const key = Object.keys(thisDep)[0]
+            const val = versions[0]
+
+            sortInstructions.toAddToRoot[dep] = val
+            sortInstructions.toRemoveFromApp[key] = [
+                ...(sortInstructions.toRemoveFromApp[key] || []),
+                dep
+            ]
+        } else {
+            // TODO: handle situations where we can consolidate similar versions
+        }
+    })
+    return sortInstructions
+}
+
+export function generateNewPackageFiles(sortedDeps: SortInstructions, rootPath?: string) {
+    const { toAddToRoot, toRemoveFromApp } = sortedDeps;
+    const toWrite = {}
+
+    Object.keys(toRemoveFromApp).forEach(path => {
+        const file = JSON.parse(readFileSync(path, 'utf-8'));
+
+        toRemoveFromApp[path].forEach(d => {
+            delete file.dependencies[d]
+        })
+
+        toWrite[path] = file
+    });
+
+    if( rootPath ) {
+        const rootFile = JSON.parse(readFileSync(rootPath, 'utf-8'));
+
+        Object.keys(toAddToRoot).forEach(d => {
+            rootFile.dependencies[d] = toAddToRoot[d]
+        })
+
+        toWrite[rootPath] = rootFile
+    }
+
+    return toWrite;
+}
+
+export function createNewPackageFiles(generated: any, actuallyChangeFiles?: boolean) {
+    if( actuallyChangeFiles ) {
+        rmSync(UPDATED_ROOT, { recursive: true, force: true});
+        mkdirSync(UPDATED_ROOT);
+    }
+
+    Object.keys(generated).forEach(filePath => {
+        const reg = new RegExp(`${START_FOLDER}\/((?<path>(\\S+)\/)?${TARGET_FILE})`)
+        const {path = ''} = filePath.match(reg)?.groups as { path: string};
+        const newPath = `${UPDATED_ROOT}/${path}`
+
+        if( actuallyChangeFiles ) {
+            if( newPath && !existsSync(newPath)) mkdirSync(newPath, {recursive: true})
+
+            writeFileSync(`${UPDATED_ROOT}/${path}${TARGET_FILE}`, JSON.stringify(generated[filePath]), 'utf8')
+        }
+    })
+    return 'Done!';
+}
+
+
+const filesToParse = readDirectoryFiles(START_FOLDER, TARGET_FILE);
+const shared = parseAppDependencies(filesToParse);
+const sortedDeps = sortDependencies(shared);
+const generated = generateNewPackageFiles(sortedDeps, rootPath);
+createNewPackageFiles(generated, process.argv.includes('actuallyChangeFiles'));
