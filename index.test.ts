@@ -106,40 +106,71 @@ describe('Node package.json Combiner', () => {
 
   describe('generateNewPackageFiles', () => {
     test('generates package contents as expected', () => {
-      // expect(generated).toEqual([
+      expect(generated["./mock-mono-repo/apps/app1/package.json"].dependencies).toEqual({
+        "dependencyC": "12.1.4",
+        "dependencyE": "18.0.0",
+        "dependencyG": "^0.5.0",
+        "dependencyL": "^3.0.23",
+        "dependencyZ": "1.1.1"
+      })
+      expect(generated[ "./mock-mono-repo/apps/app2/package.json"].dependencies).toEqual({
+        "dependencyI": "8.14.0",
+        "dependencyJ": "12.1.4",
+        "dependencyL": "^3.0.0",
+        "dependencyZ": "1.1.1"
+      })
+      // expect(generated).toEqual(
       //   {
-      //     './mock-mono-repo/package.json': {
-      //       exports: 'IAMTHEROOT',
-      //       type: 'module',
-      //       scripts: [Object],
-      //       dependencies: [Object]
+      //     "./mock-mono-repo/apps/app1/package.json": {
+      //       "dependencies": {
+      //         "dependencyC": "12.1.4",
+      //         "dependencyE": "18.0.0",
+      //         "dependencyG": "^0.5.0",
+      //         "dependencyL": "^3.0.23",
+      //         "dependencyZ": "1.1.1"
+      //       },
+      //       "exports": "APP1-Package.json",
+      //       "scripts": { "do:the:thing": "npx do --the --thing" },
+      //       "type": "module"
+      //     },
+      //     "./mock-mono-repo/apps/app2/package.json": {
+            // "dependencies": {
+            //   "dependencyI": "8.14.0",
+            //   "dependencyJ": "12.1.4",
+            //   "dependencyL": "^3.0.0",
+            //   "dependencyZ": "1.1.1"
+            // },
+      //       "exports": "APP2-Package.json",
+      //       "scripts": { "do:the:thing": "npx do --the --thing" },
+      //       "type": "module"
+      //     },
+      //     "./mock-mono-repo/apps/app3/package.json": {
+      //       "dependencies": {
+      //         "dependencyC": "~12.21.4",
+      //         "dependencyE": "8.0.0",
+      //         "dependencyI": "~3.12.0"
+      //       },
+      //       "exports": "APP3-Package.json",
+      //       "scripts": { "do:the:thing": "npx do --the --thing" },
+      //       "type": "module"
+      //     },
+      //     "./mock-mono-repo/package.json": {
+      //       "dependencies": {
+      //         "dependencyA": "^1.5.0",
+      //         "dependencyB": "^1.0.6",
+      //         "dependencyD": "11.0.0",
+      //         "dependencyG": "^0.5.0",
+      //         "dependencyH": "^2.4.4",
+      //         "dependencyJ": "12.1.4",
+      //         "dependencyK": "^9.4.12",
+      //         "dependencyZ": "1.1.1"
+      //       },
+      //       "exports": "IAMTHEROOT",
+      //       "scripts": { "do:the:thing": "npx do --the --thing" },
+      //       "type": "module"
       //     }
-      //   },
-      //   {
-      //     './mock-mono-repo/apps/app3/package.json': {
-      //       exports: 'APP3-package.json',
-      //       type: 'module',
-      //       scripts: [Object],
-      //       dependencies: [Object]
-      //     }
-      //   },
-      //   {
-      //     './mock-mono-repo/apps/app2/package.json': {
-      //       exports: 'APP2-package.json',
-      //       type: 'module',
-      //       scripts: [Object],
-      //       dependencies: [Object]
-      //     }
-      //   },
-      //   {
-      //     './mock-mono-repo/apps/app1/package.json': {
-      //       exports: 'APP1-package.json',
-      //       type: 'module',
-      //       scripts: [Object],
-      //       dependencies: [Object]
-      //     }
-      //   },
-      // ])
+      //   }
+      // )
     })
   })
 
